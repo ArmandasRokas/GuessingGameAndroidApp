@@ -2,6 +2,7 @@ package rokas.armandas.guessinggame;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -17,8 +18,11 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity {
 
     private Button btnGuess;
+    private Button btnYes;
+    private Button btnNo;
     private EditText txtGuess;
-    public TextView lblOutput;
+    private TextView lblOutput;
+    private TextView lblEnterNumber;
     private int theNumber;
     private int triesLeft;
 
@@ -46,11 +50,19 @@ public class MainActivity extends AppCompatActivity {
         }
         if (triesLeft <= 0){
 
-            startActivity(new Intent(MainActivity.this, Pop.class));
+            btnYes.setVisibility(View.VISIBLE);
+            btnNo.setVisibility(View.VISIBLE);
+            lblOutput.setText("You Lost! The number was " + theNumber);
+            txtGuess.setVisibility(View.GONE);
+            lblEnterNumber.setVisibility(View.GONE);
+            btnGuess.setVisibility(View.GONE);
+
+            // startActivity(new Intent(MainActivity.this, Pop.class)); // PopUp window, but no needed.
 
         }
 
     }
+
     public int getRandomNumbet() {
         return (int)(Math.random()*100 + 1);
     }
@@ -62,6 +74,11 @@ public class MainActivity extends AppCompatActivity {
     public void newGame() {
         lblOutput.setText("Enter the number and click Guess! You have 7 tries!");
         setTheNumberAndTries();
+        btnYes.setVisibility(View.GONE);
+        btnNo.setVisibility(View.GONE);
+        txtGuess.setVisibility(View.VISIBLE);
+        lblEnterNumber.setVisibility(View.VISIBLE);
+        btnGuess.setVisibility(View.VISIBLE);
     }
 
 
@@ -73,8 +90,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         btnGuess = (Button) findViewById(R.id.btnGuess);
+        btnYes = (Button) findViewById(R.id.btnYes);
+        btnNo = (Button) findViewById(R.id.btnNo);
         txtGuess = (EditText) findViewById(R.id.txtGuess);
         lblOutput = (TextView) findViewById(R.id.lblOutput);
+        lblEnterNumber = (TextView) findViewById(R.id.lblEnterNumber);
+
+        btnYes.setVisibility(View.GONE);
+        btnNo.setVisibility(View.GONE);
 
         btnGuess.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,6 +105,23 @@ public class MainActivity extends AppCompatActivity {
                 checkGuess();
             }
         });
+        btnYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                newGame();
+            }
+        });
+
+
+        btnNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                System.exit(0);
+            }
+        });
+
+
         txtGuess.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
